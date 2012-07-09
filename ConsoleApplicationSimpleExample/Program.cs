@@ -22,8 +22,6 @@ namespace ConsoleApplicationSimpleExample
             //Start profiling
             ConsoleProfiling.Start();
 
-            Console.WriteLine("Starting to call methods..");
-
             using (StackExchange.Profiling.MiniProfiler.Current.Step("Call Methods"))
             {
                 DoTheQuickWork();

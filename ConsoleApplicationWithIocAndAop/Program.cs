@@ -11,7 +11,6 @@
 using System;
 using System.Reflection;
 using Autofac;
-using Autofac.Core;
 using ConsoleApplicationWithIocAndAop.AOP;
 using ConsoleApplicationWithIocAndAop.Workers;
 using MiniProfiler.Windows;
@@ -33,21 +32,9 @@ namespace ConsoleApplicationWithIocAndAop
             //Start profiling
             ConsoleProfiling.Start();
 
-            Console.WriteLine("Starting to call methods..");
-
-            IProfiler profiler;
-            IDoQuickWork quick;
-            IDoSlowWork slow;
-
-            profiler = _container.Resolve<IProfiler>();
-            quick = _container.Resolve<IDoQuickWork>();
-            slow = _container.Resolve<IDoSlowWork>();
-
-            using (profiler.Step("Call Methods"))
-            {
-                quick.DoTheQuickWork();
-                slow.DoTheSlowWork();
-            }
+            //Run the application
+            var app = _container.Resolve<IConsoleApplication>();
+            app.Run();
 
             //Stop profiling and show results
             Console.WriteLine(ConsoleProfiling.StopAndGetConsoleFriendlyOutputStringWithSqlTimings());
@@ -77,6 +64,7 @@ namespace ConsoleApplicationWithIocAndAop
             //Register the types we need to run the application
             builder.RegisterType<DoQuickWork>().AsImplementedInterfaces();
             builder.RegisterType<DoSlowWork>().AsImplementedInterfaces();
+            builder.RegisterType<ConsoleApplication>().AsImplementedInterfaces();
 
             //Ensure we get useful type load exceptions: http://stackoverflow.com/a/8978721/281177
             try
@@ -93,7 +81,6 @@ namespace ConsoleApplicationWithIocAndAop
                 }
                 throw;
             }
-
         }
     }
 }
