@@ -1,0 +1,27 @@
+﻿<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>MiniProfiler.Windows</id>
+    <version>1.0.0.0</version>
+    <authors>http://about.me/nootn</authors>
+    <owners>http://about.me/nootn</owners>
+    <projectUrl>http://nootn.github.com/MiniProfiler.Windows/</projectUrl>
+    <iconUrl>https://en.gravatar.com/userimage/3172408/16287e323f3bf3578271be411aadde84.jpg</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Extends the fantastic MiniProfiler and adds functionality to make it easy to use in windows based applications (E.g. console applications).</description>
+    <copyright>Copyright http://about.me/nootn 2012</copyright>
+    <tags>miniprofiler performance console windows wpf winforms profile profiling nootn</tags>
+    <dependencies>
+      <dependency id="MiniProfiler" />
+    </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="Microsoft.CSharp" targetFramework="net40" />
+      <frameworkAssembly assemblyName="System" targetFramework="net40" />
+      <frameworkAssembly assemblyName="System.Core" targetFramework="net40" />
+      <frameworkAssembly assemblyName="System.Web" targetFramework="net40" />
+    </frameworkAssemblies>
+  </metadata>
+  <files>
+    <file src="bin\release\MiniProfiler.Windows.dll" target="lib" />
+  </files>
+</package>
