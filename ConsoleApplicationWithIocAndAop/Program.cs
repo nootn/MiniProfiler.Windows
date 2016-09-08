@@ -37,7 +37,7 @@ namespace ConsoleApplicationWithIocAndAop
             app.Run();
 
             //Stop profiling and show results
-            Console.WriteLine(ConsoleProfiling.StopAndGetConsoleFriendlyOutputStringWithSqlTimings());
+            Console.WriteLine(ConsoleProfiling.StopAndGetConsoleFriendlyOutputString());
 
             //Allow viewing of results
             Console.WriteLine("... press 'Enter' to exit process ...");
@@ -65,6 +65,10 @@ namespace ConsoleApplicationWithIocAndAop
             builder.RegisterType<DoQuickWork>().AsImplementedInterfaces();
             builder.RegisterType<DoSlowWork>().AsImplementedInterfaces();
             builder.RegisterType<ConsoleApplication>().AsImplementedInterfaces();
+
+            //Do you want to use this profiler to monitor your database or link connection?
+            //Make sure you are using a connection provider (or factory) and wrap your connections
+            //with the use of ConsoleProfiling.WrapDatabaseConnection().
 
             //Ensure we get useful type load exceptions: http://stackoverflow.com/a/8978721/281177
             try

@@ -9,6 +9,7 @@
 // */
 
 using StackExchange.Profiling;
+using System;
 
 namespace MiniProfiler.Windows
 {
@@ -21,9 +22,16 @@ namespace MiniProfiler.Windows
             return _profiler;
         }
 
-        public override StackExchange.Profiling.MiniProfiler Start(ProfileLevel level)
+        [Obsolete("Please use the Start(string sessionName) overload instead of this one. ProfileLevel is going away.")]
+        public override StackExchange.Profiling.MiniProfiler Start(ProfileLevel level, string sessionName = null)
         {
-            _profiler = new StackExchange.Profiling.MiniProfiler(ConsoleProfiling.ProfilingUrl(), level);
+            return this.Start(sessionName: sessionName);
+        }
+
+        public override StackExchange.Profiling.MiniProfiler Start(string sessionName = null)
+        {
+            _profiler = new StackExchange.Profiling.MiniProfiler(ConsoleProfiling.ProfilingUrl());
+            _profiler.Name = sessionName;
             SetProfilerActive(_profiler);
             _profiler.User = ConsoleProfiling.CurrentUser();
             return _profiler;

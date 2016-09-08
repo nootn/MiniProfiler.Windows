@@ -29,7 +29,7 @@ namespace ConsoleApplicationSimpleExample
             }
 
             //Stop profiling and show results
-            Console.WriteLine(ConsoleProfiling.StopAndGetConsoleFriendlyOutputStringWithSqlTimings());
+            Console.WriteLine(ConsoleProfiling.StopAndGetConsoleFriendlyOutputString());
 
             //Allow viewing of results
             Console.WriteLine("... press 'Enter' to exit process ...");
