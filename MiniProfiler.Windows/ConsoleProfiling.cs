@@ -14,6 +14,7 @@ using System.Linq;
 using System.Security.Principal;
 using System.Text;
 using StackExchange.Profiling;
+using System.Data.Common;
 
 namespace MiniProfiler.Windows
 {
@@ -53,6 +54,15 @@ namespace MiniProfiler.Windows
         }
 
         /// <summary>
+        ///   Wrap the connection with a profiling connection that tracks timings 
+        /// </summary>
+        /// <param name="connection"></param>
+        public static DbConnection WrapDatabaseConnection(DbConnection connection)
+        {
+            return new StackExchange.Profiling.Data.ProfiledDbConnection(connection, StackExchange.Profiling.MiniProfiler.Current);
+        }
+
+        /// <summary>
         ///   Stops profiling and returns the profiler
         /// </summary>
         /// <returns> The profiler that has been stopped </returns>
@@ -69,31 +79,28 @@ namespace MiniProfiler.Windows
         /// <param name="includeSqlWithDurationMoreThanMilliseconds"> Only include sql queries with a duration of more than the supplied number of milliseconds </param>
         /// <param name="takeTopNumberOfQueries"> Only show this number of queries </param>
         /// <returns> A string that can be rendered to a console, debug window or text file which is human readable. The SQL timings are in the format: *[duration(ms)]*["(D)" if duplicate, else empty] [stack trace snippet] [Formatted command string] </returns>
+        [Obsolete("Please use the StopAndGetConsoleFriendlyOutputString() instead of this one. Database timings are included automatically when using the WrapDatabaseConnection() connection for database calls.")]
         public static string StopAndGetConsoleFriendlyOutputStringWithSqlTimings(
             int includeSqlWithDurationMoreThanMilliseconds = 100, int takeTopNumberOfQueries = 10)
+        {
+            var output = new StringBuilder();
+            output.Append(StopAndGetConsoleFriendlyOutputString());
+            output.AppendLine("*** MiniProfiler SQL Timings:");
+            output.AppendLine("No native Sql Timing support anymore");
+            return output.ToString();
+        }
+
+        /// <summary>
+        ///   Stops the profiler and returns a console friendly output representation.
+        /// </summary>
+        /// <returns> A string that can be rendered to a console, debug window or text file which is human readable.</returns>
+        public static string StopAndGetConsoleFriendlyOutputString()
         {
             var mp = StopAndGetProfiler();
             var output = new StringBuilder();
             output.AppendLine("*** MiniProfiler Output:");
             output.AppendLine(mp.Render().ToString());
             output.AppendLine();
-            if (!mp.HasSqlTimings) return output.ToString();
-            output.AppendLine("*** MiniProfiler SQL Timings:");
-
-            //Get the top 10 SQL queries that were over 100 milliseconds unless otherwise specified
-            foreach (
-                var currTiming in
-                    mp.GetSqlTimings().Where(i => i.DurationMilliseconds > includeSqlWithDurationMoreThanMilliseconds).
-                        OrderByDescending(
-                            i => i.DurationMilliseconds).Take(takeTopNumberOfQueries))
-            {
-                output.AppendLine();
-                output.AppendFormat("*{1}*{0}		{2}{3}{4}{3}", (currTiming.IsDuplicate ? "(D)" : "   "),
-                                    Convert.ToInt32(currTiming.DurationMilliseconds),
-                                    currTiming.StackTraceSnippet, Environment.NewLine,
-                                    currTiming.FormattedCommandString.Replace(Environment.NewLine, ""));
-            }
-
             return output.ToString();
         }
     }
